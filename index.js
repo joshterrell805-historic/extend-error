@@ -15,7 +15,7 @@ Error.extend = function(subTypeName, errorCode /*optional*/) {
 	
 	//define new error type
 	
-	var SubType = (function(message) {
+	var SubType = (function(message, code) {
 		//handle constructor call without 'new'
 		if (! (this instanceof SubType)) {
 			return new SubType(message);
@@ -23,7 +23,7 @@ Error.extend = function(subTypeName, errorCode /*optional*/) {
 		
 		//populate error details
 		this.name = subTypeName; 
-		this.code = errorCode;
+		this.code = code !== undefined ? code : errorCode;
 		this.message = message || '';
 		
 		//include stack trace in error object
