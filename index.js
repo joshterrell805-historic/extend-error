@@ -1,16 +1,7 @@
 var util = require('util');
 var assert = require('assert');
 
-
-/**
- * Add extend() method to Error type
- * 
- * @param subTypeName
- * @param errorCode [optional]
- * @returns {SubType}
- */
-
-Error.extend = function(subTypeName, errorCode /*optional*/) {
+module.exports = function(parentType, subTypeName, defaultErrorCode) {
 	assert(subTypeName, 'subTypeName is required');
 	
 	//define new error type
@@ -23,7 +14,7 @@ Error.extend = function(subTypeName, errorCode /*optional*/) {
 		
 		//populate error details
 		this.name = subTypeName; 
-		this.code = code !== undefined ? code : errorCode;
+		this.code = code !== undefined ? code : defaultErrorCode;
 		this.message = message || '';
 		
 		//include stack trace in error object
@@ -31,16 +22,13 @@ Error.extend = function(subTypeName, errorCode /*optional*/) {
 	});
 	
 	//inherit the base prototype chain
-	util.inherits(SubType, this);
+	util.inherits(SubType, parentType);
 	
 	
 	//override the toString method to error type name and inspected message (to expand objects)
 	SubType.prototype.toString = function() {
 		return this.name + ': ' + util.inspect(this.message);
 	};
-	
-	//attach extend() to the SubType to make it extendable further
-	SubType.extend = this.extend;
 	
 	return SubType;
 };
